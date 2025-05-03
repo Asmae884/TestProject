@@ -1,0 +1,79 @@
+<Window x:Class="WpfApp1.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="AES Text Encryption" Height="500" Width="800"
+        Background="#FFF9F9F9"
+        WindowStartupLocation="CenterScreen">
+    <Grid>
+        <!-- Top Panel (Header) -->
+        <Border Background="#FFFAFAFA" BorderBrush="#800080" BorderThickness="0,0,0,3">
+            <DockPanel Height="70" VerticalAlignment="Top">
+                <Image Source="logo.png" Height="50" Margin="20,10" DockPanel.Dock="Left"/>
+                <TextBlock Text="AES Text Encryption Tool"
+                           FontSize="24"
+                           VerticalAlignment="Center"
+                           Foreground="#4B0082"
+                           FontWeight="Bold"
+                           Margin="10,0,0,0"/>
+            </DockPanel>
+        </Border>
+
+        <!-- Main Content Area -->
+        <StackPanel Margin="30,90,30,30" VerticalAlignment="Top" Orientation="Vertical" Spacing="20">
+
+            <!-- Input TextBox -->
+            <TextBlock Text="Enter Text to Encrypt/Decrypt:"
+                       FontSize="16"
+                       Foreground="Black"
+                       Margin="0,0,0,5"/>
+            <TextBox x:Name="InputTextBox"
+                     Height="100"
+                     TextWrapping="Wrap"
+                     AcceptsReturn="True"
+                     FontSize="14"
+                     VerticalScrollBarVisibility="Auto"
+                     BorderBrush="#CCCCCC"
+                     BorderThickness="1"
+                     Padding="10"/>
+
+            <!-- Buttons -->
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="15" Margin="0,10">
+                <Button Content="Encrypt"
+                        Width="120"
+                        Height="40"
+                        Background="#4B0082"
+                        Foreground="White"
+                        FontWeight="Bold"
+                        BorderThickness="0"
+                        Cursor="Hand"
+                        Click="Encrypt_Click"/>
+                <Button Content="Decrypt"
+                        Width="120"
+                        Height="40"
+                        Background="#4B0082"
+                        Foreground="White"
+                        FontWeight="Bold"
+                        BorderThickness="0"
+                        Cursor="Hand"
+                        Click="Decrypt_Click"/>
+            </StackPanel>
+
+            <!-- Output TextBox -->
+            <TextBlock Text="Result:"
+                       FontSize="16"
+                       Foreground="Black"
+                       Margin="0,10,0,5"/>
+            <TextBox x:Name="OutputTextBox"
+                     Height="100"
+                     TextWrapping="Wrap"
+                     AcceptsReturn="True"
+                     FontSize="14"
+                     VerticalScrollBarVisibility="Auto"
+                     IsReadOnly="True"
+                     Background="#F0F0F0"
+                     BorderBrush="#CCCCCC"
+                     BorderThickness="1"
+                     Padding="10"/>
+        </StackPanel>
+    </Grid>
+</Window>

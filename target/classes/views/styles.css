@@ -1,0 +1,18 @@
+/* styles.css */
+.button:hover {
+    -fx-background-color: #4A2D63; /* Une couleur légèrement plus foncée pour l'effet hover */
+}
+
+.clickable {
+    -fx-cursor: hand;
+}
+
+.clickable:pressed {
+    -fx-translate-y: 1px; /* Petit déplacement vers le bas pour l'effet pressé */
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 0, 1, 0, 1); /* Ombre plus petite pour l'effet pressé */
+}
+
+.button:pressed {
+    -fx-background-color: #3A2353; /* Couleur encore plus foncée pour le bouton pressé */
+    -fx-translate-y: 1px;
+}
