@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.emi.projetintegre.controllers.FileActionMenuController"
+      spacing="10"
+      style="-fx-background-color: white; -fx-padding: 10; -fx-border-color: gray; -fx-border-radius: 5;"
+      alignment="TOP_LEFT">
+    
+    <Label text="Ouvrir" onMouseClicked="#handleOpen" style="-fx-cursor: hand;"/>
+    <Label text="Télécharger" onMouseClicked="#handleDownload" style="-fx-cursor: hand;"/>
+    <Label text="Partager" onMouseClicked="#handleShare" style="-fx-cursor: hand;"/>
+
+    <Separator prefWidth="200"/>
+
+    <Label text="Crypter" onMouseClicked="#handleEncrypt" style="-fx-cursor: hand;"/>
+    <Label text="Décrypter" onMouseClicked="#handleDecrypt" style="-fx-cursor: hand;"/>
+
+    <Separator prefWidth="200"/>
+
+    <Label text="Propriétés" onMouseClicked="#handleProperties" style="-fx-cursor: hand;"/>
+
+    <Separator prefWidth="200"/>
+
+    <Label text="Supprimer" onMouseClicked="#handleDelete" style="-fx-text-fill: red; -fx-cursor: hand;"/>
+</VBox>
