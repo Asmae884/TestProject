@@ -1,0 +1,4 @@
+Ce package contient les classes responsables de l'accès aux données 
+(par exemple, la gestion des documents, leur stockage et récupération). 
+Celles-ci peuvent être des interfaces pour la base de données ou des objets 
+pour manipuler les fichiers locaux.

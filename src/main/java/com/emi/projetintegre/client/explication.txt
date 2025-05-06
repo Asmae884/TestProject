@@ -1,0 +1,3 @@
+Ce package contient les classes liées au côté client de l'application. 
+Ces classes peuvent gérer l'interface utilisateur (par exemple, JavaFX pour la partie graphique) 
+et la logique d'interaction avec le serveur via des sockets.

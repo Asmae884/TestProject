@@ -1,0 +1,2 @@
+Ici, vous trouverez les classes représentant des entités du projet, comme User, 
+PersonalDocument, etc.

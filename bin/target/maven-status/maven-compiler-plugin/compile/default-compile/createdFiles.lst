@@ -1,6 +1,8 @@
+com\emi\projetintegre\controllers\HomeController$FileItem.class
 com\emi\projetintegre\MainApp.class
 com\emi\projetintegre\models\DocumentAccess.class
 com\emi\projetintegre\server\ClientHandler.class
+com\emi\projetintegre\server\PersonalDocument.class
 com\emi\projetintegre\controllers\HomeController$1.class
 com\emi\projetintegre\models\User.class
 com\emi\projetintegre\services\UserService.class
@@ -15,14 +17,9 @@ com\emi\projetintegre\controllers\HomeController.class
 com\emi\projetintegre\server\DatabaseManager.class
 com\emi\projetintegre\models\Administrator.class
 com\emi\projetintegre\models\Security.class
-com\emi\projetintegre\controllers\SignalPasswordLostController.class
-com\emi\projetintegre\client\AuthenticationManager.class
 com\emi\projetintegre\client\CommunicationManager.class
-com\emi\projetintegre\services\PasswordManager.class
 com\emi\projetintegre\controllers\LoginController.class
-com\emi\projetintegre\controllers\FileActionMenuController.class
 com\emi\projetintegre\client\ClientMain.class
 com\emi\projetintegre\client\ClientSocketManager.class
-com\emi\projetintegre\client\DocumentManager.class
 com\emi\projetintegre\models\Client.class
 com\emi\projetintegre\models\PersonalDocument.class

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="600" minWidth="800" prefHeight="720" prefWidth="1280" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.emi.projetintegre.controllers.LoginController">
+    
+    <HBox AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+        <!-- Left side with gradient background (40% width) -->
+        <StackPane fx:id="leftPane" style="-fx-background-color: #F3E8FD;" HBox.hgrow="ALWAYS">
+            <Rectangle fill="#F3E8FD" height="600" width="450" />
+            
+            <!-- Gradient rectangles (animation handled in controller) -->
+            <Rectangle fx:id="gradient1" arcHeight="50" arcWidth="50" fill="#CBFFB4" height="300" opacity="0.3" width="300">
+                <StackPane.margin>
+                    <Insets left="50" top="100" />
+                </StackPane.margin>
+            </Rectangle>
+            
+            <Rectangle fx:id="gradient2" arcHeight="50" arcWidth="50" fill="#FFD0E0" height="250" opacity="0.3" width="250">
+                <StackPane.margin>
+                    <Insets left="200" top="300" />
+                </StackPane.margin>
+            </Rectangle>
+            
+            <Rectangle fx:id="gradient3" arcHeight="50" arcWidth="50" fill="#F3E8FD" height="200" opacity="0.4" width="200">
+                <StackPane.margin>
+                    <Insets left="100" top="400" />
+                </StackPane.margin>
+            </Rectangle>
+            
+            <!-- Logo or branding -->
+            <VBox alignment="CENTER" spacing="20">
+                <ImageView fitHeight="80" fitWidth="80" preserveRatio="true">
+                    <image>
+                        <Image url="@logo-icon.png" />
+                    </image>
+                </ImageView>
+                <Label style="-fx-text-fill: #5D3A7A;" text="CrypticShare">
+                    <font>
+                        <Font name="Google Sans" size="24" />
+                    </font>
+                </Label>
+            </VBox>
+        </StackPane>
+        
+        <!-- Right side with login form (60% width) -->
+        <VBox fx:id="rightPane" alignment="CENTER" spacing="30" style="-fx-background-color: white;" HBox.hgrow="ALWAYS">
+            <padding>
+                <Insets bottom="50" left="50" right="50" top="50" />
+            </padding>
+            
+            <VBox alignment="CENTER_LEFT" prefWidth="727.0" spacing="10" VBox.vgrow="NEVER">
+                <Label style="-fx-text-fill: #5D3A7A;" text="Bienvenue">
+                    <font>
+                        <Font name="Google Sans" size="28" />
+                    </font>
+                </Label>
+                <Label style="-fx-text-fill: #666;" text="Veuillez vous authentifier pour accéder à vos documents">
+                    <font>
+                        <Font name="Google Sans" size="14" />
+                    </font>
+                </Label>
+            </VBox>
+            
+            <VBox alignment="CENTER" maxWidth="400" spacing="20" VBox.vgrow="ALWAYS">
+                <TextField fx:id="usernameField" prefHeight="45" promptText="Nom d'utilisateur" style="-fx-background-radius: 8; -fx-border-radius: 8; -fx-border-color: #ddd; -fx-border-width: 1; -fx-padding: 0 15;">
+                    <font>
+                        <Font name="Google Sans" size="14" />
+                    </font>
+                    <VBox.margin>
+                        <Insets bottom="10" />
+                    </VBox.margin>
+                </TextField>
+                
+                <PasswordField fx:id="passwordField" prefHeight="45" promptText="Mot de passe" style="-fx-background-radius: 8; -fx-border-radius: 8; -fx-border-color: #ddd; -fx-border-width: 1; -fx-padding: 0 15;">
+                    <font>
+                        <Font name="Google Sans" size="14" />
+                    </font>
+                    <VBox.margin>
+                        <Insets bottom="10" />
+                    </VBox.margin>
+                </PasswordField>
+                
+                <Button fx:id="loginButton" prefHeight="45" style="-fx-background-color: #5D3A7A; -fx-text-fill: white; -fx-background-radius: 8;" text="Se Connecter">
+                    <font>
+                        <Font name="Google Sans" size="14" />
+                    </font>
+                    <VBox.margin>
+                        <Insets bottom="10" />
+                    </VBox.margin>
+                </Button>
+                
+                <Hyperlink fx:id="forgotPasswordLink" style="-fx-text-fill: #FFD0E0; -fx-border-color: transparent;" text="Signaler votre perte de mot de passe">
+                    <font>
+                        <Font name="Google Sans" size="12" />
+                    </font>
+                </Hyperlink>
+            </VBox>
+        </VBox>
+    </HBox>
+</AnchorPane>

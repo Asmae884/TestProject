@@ -1,0 +1,3 @@
+Ce package peut contenir les classes qui gèrent la logique de l'application, 
+les contrôleurs pour l'interaction avec l'interface utilisateur.
+GUI
