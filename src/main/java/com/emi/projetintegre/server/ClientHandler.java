@@ -1,4 +1,5 @@
 package com.emi.projetintegre.server;
+import com.emi.projetintegre.models.PersonalDocument;
 
 import java.io.*;
 import java.net.Socket;
@@ -11,8 +12,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
-
-import com.emi.projetintegre.models.PersonalDocument;
 
 public class ClientHandler implements Runnable {
     private static final String UPLOAD_DIR = "UserFiles";
@@ -117,7 +116,11 @@ public class ClientHandler implements Runnable {
                         sendError("NOT_AUTHENTICATED");
                         break;
                     }
-                    handleListDocuments();
+                    String searchTerm = input.readUTF(); // Read search term
+                    if (searchTerm.isEmpty()) {
+                        searchTerm = null; // Treat empty string as no search
+                    }
+                    handleListDocuments(searchTerm);
                     break;
 
                 case "DOWNLOAD_DOCUMENT":
@@ -218,7 +221,6 @@ public class ClientHandler implements Runnable {
 
     private boolean checkDuplicateFile(String fileName) {
         try {
-            // Check database for existing file name for this user
             String sql = "SELECT COUNT(*) FROM PersonalDocuments WHERE owner_id = ? AND file_name = ?";
             try (PreparedStatement stmt = dbConnection.prepareStatement(sql)) {
                 stmt.setInt(1, userId);
@@ -233,7 +235,6 @@ public class ClientHandler implements Runnable {
                 }
             }
 
-            // Optionally, check file system as well
             Path userDir = getUserDirectory();
             Path filePath = userDir.resolve(fileName);
             if (Files.exists(filePath)) {
@@ -395,7 +396,7 @@ public class ClientHandler implements Runnable {
         return hexString.toString();
     }
 
-    private void handleListDocuments() throws IOException {
+    private void handleListDocuments(String searchTerm) throws IOException {
         if (!isAuthenticated) {
             System.err.println("Unauthorized attempt to list documents for client: " + clientSocket.getInetAddress());
             sendError("NOT_AUTHENTICATED");
@@ -416,11 +417,19 @@ public class ClientHandler implements Runnable {
 
         try {
             String sql = "SELECT docID, file_name, file_type, upload_date, file_size FROM PersonalDocuments WHERE owner_id = ?";
-            List<List<String>> documents = new ArrayList<>();
+            if (searchTerm != null && !searchTerm.trim().isEmpty()) {
+                sql += " AND UPPER(file_name) LIKE UPPER(?)";
+            }
 
-            System.out.println("Querying documents for userId: " + userId);
+            List<List<String>> documents = new ArrayList<>();
+            System.out.println("Querying documents for userId: " + userId + (searchTerm != null ? " with search: " + searchTerm : ""));
+            
             try (PreparedStatement stmt = dbConnection.prepareStatement(sql)) {
                 stmt.setInt(1, userId);
+                if (searchTerm != null && !searchTerm.trim().isEmpty()) {
+                    stmt.setString(2, "%" + searchTerm.trim() + "%"); // Wildcards for partial match
+                }
+                
                 try (ResultSet rs = stmt.executeQuery()) {
                     while (rs.next()) {
                         List<String> document = new ArrayList<>();
@@ -505,30 +514,26 @@ public class ClientHandler implements Runnable {
             return false;
         }
 
-        // Illegal characters for both Windows & Linux
         Pattern illegalChars = Pattern.compile(
-            "[\\\\/:*?\"<>|]" +  // Windows reserved chars
-            "|[-\u001F]" +  // Control chars (ASCII 0-31)
-            "|^[.\\s]+$"          // Filename cannot be just dots/spaces
+            "[\\\\/:*?\"<>|]" +  
+            "|[-\u001F]" +  
+            "|^[.\\s]+$"          
         );
 
-        // Reserved filenames (Windows: CON, PRN, AUX, NUL, COM1-9, LPT1-9)
         Pattern reservedNames = Pattern.compile(
             "^(CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])(\\..*)?$",
             Pattern.CASE_INSENSITIVE
         );
 
-        // Check for path traversal ("../", "..\", etc.)
         boolean containsPathTraversal = fileName.contains("..") || 
-                                       fileName.contains("./") || 
-                                       fileName.contains(".\\");
+                                        fileName.contains("./") || 
+                                        fileName.contains(".\\");
 
-        // Check for invalid characters, reserved names, and path traversal
         return !illegalChars.matcher(fileName).find() &&
-               !reservedNames.matcher(fileName).matches() &&
-               !containsPathTraversal &&
-               !fileName.endsWith(".") &&  // Windows: cannot end with a dot
-               !fileName.endsWith(" ");    // Windows: cannot end with a space
+                !reservedNames.matcher(fileName).matches() &&
+                !containsPathTraversal &&
+                !fileName.endsWith(".") &&  
+                !fileName.endsWith(" ");    
     }
 
     private boolean hasEnoughSpace(long requiredSize) {
