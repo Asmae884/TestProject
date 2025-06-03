@@ -129,7 +129,7 @@
                         <VBox fx:id="vb10" layoutX="230.0" layoutY="-19.0" prefHeight="168.0" prefWidth="106.0">
                            <children>
                               <Accordion fx:id="acc" />
-                              <Button fx:id="open" mnemonicParsing="false" prefHeight="25.0" prefWidth="108.0" style="-fx-background-color: #ffffff; -fx-border-color: #B8B8B8;" text="ouvrir" textFill="#7c2e94" />
+                              <Button fx:id="open" mnemonicParsing="false" onAction="#handleOpenFile" prefHeight="25.0" prefWidth="108.0" style="-fx-background-color: #ffffff; -fx-border-color: #B8B8B8;" text="ouvrir" textFill="#7c2e94" />
                               <Button fx:id="encrypt" mnemonicParsing="false" onAction="#handleEncryptFile" prefHeight="25.0" prefWidth="107.0" style="-fx-background-color: #ffffff; -fx-border-color: #B8B8B8;" text="crypter" textFill="#6f2780" />
                               <Button fx:id="decrypte" mnemonicParsing="false" onAction="#handleDecryptFile" prefHeight="25.0" prefWidth="111.0" style="-fx-background-color: #ffffff; -fx-border-color: #B8B8B8;" text="decrypter" textFill="#581c70" />
                               <Button fx:id="download" mnemonicParsing="false" prefHeight="25.0" prefWidth="107.0" style="-fx-background-color: #ffffff; -fx-border-color: #B8B8B8;" text="telecharger" textFill="#662682" />
