@@ -116,18 +116,16 @@ public class SharedWithMeController {
     @FXML
     private TableView<Partage> fileTable;
 
-    @FXML
-    private TableColumn<?, ?> fileoptionColumn;
 
     private ObservableList<Partage> partageList = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
         // Associer les colonnes aux propriétés de la classe Partage
-        fileNameColumn.setCellValueFactory(new PropertyValueFactory<>("nom"));
+        fileNameColumn.setCellValueFactory(new PropertyValueFactory<>("file_name"));
         fileOwnerColumn.setCellValueFactory(new PropertyValueFactory<>("proprietaire"));
-        fileDateShareColumn.setCellValueFactory(new PropertyValueFactory<>("datePartage"));
-        fileSizeColumn.setCellValueFactory(new PropertyValueFactory<>("taille"));
+        fileDateShareColumn.setCellValueFactory(new PropertyValueFactory<>("date_partage"));
+        fileSizeColumn.setCellValueFactory(new PropertyValueFactory<>("file_size"));
         filePermissionColumn.setCellValueFactory(new PropertyValueFactory<>("permissions"));
 
         // Charger les fichiers partagés avec moi
@@ -135,19 +133,19 @@ public class SharedWithMeController {
     }
     
     private void loadSharedWithMeFiles() {
-        partageList.clear();
+        //partageList.clear();
 
         String query = """
-            SELECT f.nom, 
+            SELECT f.file_name, 
                    owner_user.login AS proprietaire, 
-                   f.taille, 
+                   f.file_size, 
                    p.date_partage,
                    CONCAT(IF(p.lire=1, 'Lire ', ''),
                           IF(p.ecrire=1, 'Écrire ', ''),
                           IF(p.charger=1, 'Charger ', ''),
                           IF(p.supprimer=1, 'Supprimer', '')) AS permissions
             FROM partages p
-            INNER JOIN fichiers f ON p.fichier_id = f.id
+            INNER JOIN personaldocuments f ON p.fichier_id = f.docID
             INNER JOIN utilisateurs2 owner_user ON p.ownerid = owner_user.userID
             WHERE p.utilisateur_id = ?;
         """;
@@ -161,10 +159,10 @@ public class SharedWithMeController {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 Partage partage = new Partage(
-                    rs.getString("nom"),
+                    rs.getString("file_name"),
                     rs.getString("proprietaire"),
                     rs.getString("date_partage"),
-                    rs.getString("taille"),
+                    rs.getString("file_size"),
                     rs.getString("permissions")
                 );
                 partageList.add(partage);
@@ -174,6 +172,11 @@ public class SharedWithMeController {
         }
 
         fileTable.setItems(partageList);
+        System.out.println("Nombre d'éléments dans partageList : " + partageList.size());
+        for (Partage p : partageList) {
+            System.out.println(p.getFile_name());
+        }
+
     }
 
 

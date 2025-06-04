@@ -163,5 +163,5 @@ public class UtilisateurPermission {
     public BooleanProperty supprimerProperty() {
         return supprimer;
     }
-}
+}  
 

@@ -220,7 +220,6 @@
 							        <TableColumn fx:id="fileOwnerColumn" prefWidth="201.33328247070312" style="-fx-background-color: #CBFFB4; -fx-padding: 5; -fx-font-family: 'System'; -fx-font-size: 12;" text="Propriétaire" />
 							        <TableColumn fx:id="fileDateShareColumn" prefWidth="231.3333740234375" style="-fx-background-color: #CBFFB4; -fx-padding: 5; -fx-font-family: 'System'; -fx-font-size: 12;" text="Date de partage" />
 							        <TableColumn fx:id="fileSizeColumn" prefWidth="225.3333740234375" style="-fx-background-color: #CBFFB4; -fx-padding: 5; -fx-font-family: 'System'; -fx-font-size: 12;" text="Taille" />
-                                    <TableColumn fx:id="fileoptionColumn" minWidth="0.0" prefWidth="0.0" style="-fx-background-color: #CBFFB4;" />
                                     <TableColumn fx:id="filePermissionColumn" prefWidth="260.0" style="-fx-background-color: #CBFFB4; -fx-padding: 5; -fx-font-family: 'System'; -fx-font-size: 12;" text="Permissions" />
 							    </columns>
 							</TableView>                   
