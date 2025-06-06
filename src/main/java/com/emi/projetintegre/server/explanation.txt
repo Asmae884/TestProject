@@ -1,0 +1,101 @@
+====== Packet : Server =======
+
+  === Class ClientHandler ===
+   This is a server-side class that handles individual client connections in a file sharing/management system.
+   This class provides a comprehensive handler for client connections, managing authentication, file operations, and database interactions while maintaining security and proper resource management.
+   
+   == Core Functions ==
+    = Constructor =
+     - Initializes the handler with a client socket connection
+     - Stores the socket for later communication
+    = run() =
+     - Main execution thread for each client
+     - Sets up communication streams
+     - Establishes database connection
+     - Processes incoming commands until client disconnects
+     - Ensures resources are cleaned up
+     
+    == Command Processing Function == nervous system
+	 = processClientCommands() = 
+	  - Continuously listens for client commands
+      - Validates command format (must be String)
+      - Routes to appropriate handler methods
+      - Enforces authentication checks
+     
+   == Authentication Functions ==
+    = handleAuthenticate() =
+     - Handles client authentication attempts
+     - Limits attempts to MAX_AUTH_ATTEMPTS (3)
+     - Reads credentials from client
+     - Calls authenticate() to verify credentials
+    = authenticate =
+     - Verifies user credentials against database
+     - Sets userId and username if successful
+     - Returns authentication status
+     
+    == File Handling & Managing Functions ==
+     =  handleFileUpload() =
+      - Handles files with additional metadata
+	  - Includes file type, upload date, etc.
+	  - Calculates SHA-256 hash for file integrity
+	  - Stores metadata in database
+	 = handleCheckDuplicateFile() =
+	  - Checks if file already exists for user
+	  - Verifies in both database and filesystem
+	  - Returns appropriate status to client
+	 = checkDuplicateFile() =
+	  - Checks if a file already exists for the user
+	  - Verifies in both database (metadata) and filesystem (actual file)
+	 = handleListDocuments() =
+	  - Retrieves user's document list from database
+	  - Includes ID, name, type, date, size
+	  - Formats data for client consumption
+	  
+	== Utility Functions ==
+	 = getUserDirectory() =
+	  - Creates and returns user-specific storage directory
+	  - Ensures directory exists before returning
+	 = calculateFileHash() =
+	  - Generates cryptographic hash of file content
+	  - Uses SHA-256 algorithm
+	  - Returns hash as hexadecimal string
+	 = isValidFilename()
+	  - Validates filename security
+	  - Prevents path traversal attacks
+	  - Blocks reserved system names
+	  - Ensures cross-platform compatibility
+	 = getUsername() =
+	  - Caches username after first lookup
+	  - Falls back to "unknown_user" if query fails
+	  
+	== Database Functions ==
+	 = connectToDB() =
+	  - Establishes connection to MySQL database
+	  - Uses configured credentials
+	  - Stores connection for later use
+	 = storeDocumentInDB() =
+	  - Stores document metadata in database
+	  - Includes name, hash, dates, owner, type, size
+	  - Uses prepared statement for security
+	 = storeFileInDatabase() =
+	  - Stores complete document metadata
+	  - Generates and stores SHA-256 file hash
+	  - Handles upload timestamps
+	  - Returns generated document ID
+	 = isConnectionClosed() =
+	  - Safely checks database connection states
+	  
+	== Communication Functions ==
+	 = sendResponse() =
+	  - Sends standard response to client
+	  - Flushes output stream
+	 = sendError() =
+	  - Formats and sends error messages
+	  - Prepends "ERROR:" to message
+	  
+	== Cleanup Function ==
+     = cleanupResources() =
+      - Ensures proper resource release
+      - Closes I/O streams
+      - Terminates database connection
+      - Closes client socket

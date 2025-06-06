@@ -6,6 +6,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
@@ -19,6 +20,7 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.stage.Popup;
 import java.io.IOException;
+
 import com.emi.projetintegre.client.ClientSocketManager;
 import com.emi.projetintegre.models.PersonalDocument;
 
@@ -120,9 +122,82 @@ public class HomeController {
         fileSizeColumn.setCellValueFactory(cellData -> new SimpleStringProperty(
             formatSize(cellData.getValue().getSize())));
 
+        // Setup cell factories with click handlers for name columns
+        recentNameColumn.setCellFactory(column -> {
+            TableCell<PersonalDocument, String> cell = new TableCell<PersonalDocument, String>() {
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) {
+                        setText(null);
+                    } else {
+                        setText(item);
+                    }
+                }
+            };
+
+            // Add click handler to the cell
+            cell.setOnMouseClicked(event -> {
+                if (!cell.isEmpty()) {
+                    PersonalDocument doc = (PersonalDocument) cell.getTableRow().getItem();
+                    if (doc != null) {
+                        if (event.getClickCount() == 1) {
+                            System.out.println("Single clicked on: " + doc.getFileName());
+                            cell.getTableView().getSelectionModel().select(cell.getIndex());
+                        } else if (event.getClickCount() == 2) {
+                            System.out.println("Double clicked on: " + doc.getFileName());
+                            openFileViewer(doc);
+                        }
+                    }
+                }
+            });
+
+            return cell;
+        });
+
+        fileNameColumn.setCellFactory(column -> {
+            TableCell<PersonalDocument, String> cell = new TableCell<PersonalDocument, String>() {
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) {
+                        setText(null);
+                    } else {
+                        setText(item);
+                    }
+                }
+            };
+
+            // Add click handler to the cell
+            cell.setOnMouseClicked(event -> {
+                if (!cell.isEmpty()) {
+                    PersonalDocument doc = (PersonalDocument) cell.getTableRow().getItem();
+                    if (doc != null) {
+                        if (event.getClickCount() == 1) {
+                            System.out.println("Single clicked on: " + doc.getFileName());
+                            cell.getTableView().getSelectionModel().select(cell.getIndex());
+                        } else if (event.getClickCount() == 2) {
+                            System.out.println("Double clicked on: " + doc.getFileName());
+                            openFileViewer(doc);
+                        }
+                    }
+                }
+            });
+
+            return cell;
+        });
+
         // Setup Menu Columns
         setupMenuColumn(recentMenuColumn);
         setupMenuColumn(fileMenuColumn);
+        
+        // Ensure selection model is set to single selection
+        recentTable.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        fileTable.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+
+        // Ensure tables are focusable and selectable
+        recentTable.setMouseTransparent(false);
+        fileTable.setMouseTransparent(false);
     }
 
     private void setupMenuColumn(TableColumn<PersonalDocument, Void> menuColumn) {
@@ -133,10 +208,16 @@ public class HomeController {
 
             {
                 menuButton.setStyle("-fx-font-size: 14; -fx-background-color: transparent; -fx-text-fill: black;");
-                menuButton.setVisible(false);
                 menuButton.setOnAction(event -> {
                     PersonalDocument doc = getTableView().getItems().get(getIndex());
                     showFileActionMenu(doc, menuButton);
+                    event.consume(); // Explicitly consume the action event
+                });
+                // Prevent menuButton from consuming double-click events
+                menuButton.setOnMouseClicked(event -> {
+                    if (event.getClickCount() == 2) {
+                        event.consume(); // Let double-click pass through to table
+                    }
                 });
             }
 
@@ -147,13 +228,8 @@ public class HomeController {
                     setGraphic(null);
                 } else {
                     setGraphic(menuButton);
-                    getTableRow().hoverProperty().addListener((obs, oldVal, newVal) -> {
-                        menuButton.setVisible(newVal && !empty);
-                        System.out.println("Hover on " + getTableView().getId() + " row " + getIndex() + ": " + newVal);
-                        if (newVal && getTableView().getSelectionModel().getSelectedIndex() != getIndex()) {
-                            getTableView().getSelectionModel().clearSelection();
-                        }
-                    });
+                    // Always keep the button visible
+                    menuButton.setVisible(true);
                 }
             }
         });
@@ -270,10 +346,10 @@ public class HomeController {
         fileTable.getSelectionModel().clearSelection();
     }
 
-    private void setupButtonHoverEffects() {
+    private void setupButtonHoverEffects() { //add hover effects here!!!
         for (Button btn : new Button[]{uploadBtn, homeBtn, sharedWithMeBtn, mySharedBtn, recentBtn, starredBtn, trashBtn}) {
-            btn.setOnMouseEntered(e -> btn.setCursor(Cursor.HAND));
-            btn.setOnMouseExited(e -> btn.setCursor(Cursor.DEFAULT));
+            btn.setOnMouseEntered(_ -> btn.setCursor(Cursor.HAND));
+            btn.setOnMouseExited(_ -> btn.setCursor(Cursor.DEFAULT));
         }
     }
 
@@ -333,8 +409,30 @@ public class HomeController {
 
     @FXML
     private void handleSharedWithMeAction() {
-        System.out.println("Shared with me action triggered");
+    	System.out.println("Shared With Me action triggered");
+        try {
+            System.out.println("Loading ShareWithMe.fxml");
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/emi/projetintegre/views/SharedWithMe.fxml"));
+            Parent root = loader.load();
+            
+            // Pass the clientSocketManager to the Home controller
+            SharedWithMeController sharedWithMeController = loader.getController();
+            System.out.println("Setting ClientSocketManager");
+            sharedWithMeController.setClientSocketManager(clientSocketManager);
+            System.out.println("Refreshing tables after login");
+            sharedWithMeController.refreshTablesAfterLogin();
+            
+            System.out.println("Showing Share With Me scene");
+            Stage stage = (Stage) sharedWithMeBtn.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Share With Me");
+            stage.show();
+        } catch (IOException e) {
+            showAlert("Erreur", "Impossible de charger la page des fichiers partagés avec moi");
+            e.printStackTrace();
+        }
     }
+    
 
     @FXML
     private void handleMySharedAction() {
@@ -354,6 +452,26 @@ public class HomeController {
     @FXML
     private void handleTrashAction() {
         System.out.println("Trash action triggered");
+        try {
+            System.out.println("Loading Trash.fxml");
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/emi/projetintegre/views/Trash.fxml"));
+            Parent root = loader.load();
+
+            TrashController trashController = loader.getController();
+            System.out.println("Setting ClientSocketManager");
+            trashController.setClientSocketManager(clientSocketManager);
+            System.out.println("Refreshing tables after login");
+            trashController.refreshTablesAfterLogin();
+
+            System.out.println("Showing Trash scene");
+            Stage stage = (Stage) trashBtn.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Trash");
+            stage.show();
+        } catch (IOException e) {
+            showAlert("Error", "Failed to load Trash page: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -367,21 +485,22 @@ public class HomeController {
         System.out.println("Search query: " + query);
     }
 
-    @FXML
-    private void handleRecentTableClick(MouseEvent event) {
-        PersonalDocument selectedItem = recentTable.getSelectionModel().getSelectedItem();
-        if (selectedItem != null && event.getClickCount() == 2) {
-            System.out.println("Double-clicked recent file: " + selectedItem.getFileName());
-            showAlert("Not Implemented", "Downloading files is not yet implemented.");
-        }
-    }
+    private void openFileViewer(PersonalDocument document) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/emi/projetintegre/views/FileViewer.fxml"));
+            Scene scene = new Scene(loader.load());
+            FileViewerController controller = loader.getController();
+            controller.setClientSocketManager(clientSocketManager);
+            controller.setDocument(document);
 
-    @FXML
-    private void handleFileTableClick(MouseEvent event) {
-        PersonalDocument selectedItem = fileTable.getSelectionModel().getSelectedItem();
-        if (selectedItem != null && event.getClickCount() == 2) {
-            System.out.println("Double-clicked file: " + selectedItem.getFileName());
-            showAlert("Not Implemented", "Downloading files is not yet implemented.");
+            Stage stage = new Stage();
+            stage.setTitle("View File: " + document.getFileName());
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setScene(scene);
+            stage.showAndWait();
+        } catch (IOException e) {
+            showAlert("Error", "Failed to open file viewer: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 

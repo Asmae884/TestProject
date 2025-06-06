@@ -5,13 +5,12 @@ import java.time.LocalDate;
 
 import com.emi.projetintegre.services.PasswordManager;
 
-public abstract class User {
+public class User { //abstract
     protected int userID;
     protected String login;
     protected String password; // hashed
     protected LocalDate creationDatePassword;
     protected LocalDate validityDatePassword;
-    protected PasswordManager passwordManager;
 
     // Constructeur par défaut
     public User() {
@@ -50,7 +49,7 @@ public abstract class User {
     }
 
     public void setPassword(String password) throws NoSuchAlgorithmException {
-        this.password = passwordManager.hashPassword(password);  // Hachage du mot de passe lors de l'appel du setter
+        this.password = PasswordManager.hashPassword(password);  // Hachage du mot de passe lors de l'appel du setter
     }
 
     // Getter et Setter pour creationDatePassword

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="CENTER" prefHeight="302.0" prefWidth="416.0" spacing="15.0" style="-fx-background-color: #ffffff; -fx-border-color: #5D3A7A; -fx-border-radius: 0 0 8 8; -fx-background-radius: 8;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.emi.projetintegre.controllers.DownloadDialogController">
+   <padding>
+      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+   </padding>
+   <children>
+      <Pane style="-fx-border-color: transparent transparent #5d3a7a transparent;">
+         <children>
+            <Label layoutX="76.0" text="Télécharger un Nouveau Fichier" textAlignment="CENTER" textFill="#5D3A7A">
+               <font>
+                  <Font name="Roboto Bold" size="16.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
+      
+                  <!-- Chemin -->
+      <VBox spacing="5.0">
+         <Label text="Chemin :" textFill="#5D3A7A" />
+         <HBox alignment="CENTER_LEFT" spacing="10.0">
+            <TextField fx:id="pathField" prefWidth="300.0" promptText="Entrer le chemin" style="-fx-background-color: #f1f3f4; -fx-background-radius: 4;" />
+            <Button fx:id="browseButton" onAction="#handleBrowseAction" style="-fx-background-color: #e8def8; -fx-text-fill: #5D3A7A; -fx-background-radius: 4;" text="Parcourir" />
+         </HBox>
+      </VBox>
+      
+                           <!-- Nom -->
+      <VBox spacing="5.0">
+         <Label text="Nom :" textFill="#5D3A7A" />
+         <TextField fx:id="nameField" promptText="Entrer le nom du fichier" style="-fx-background-color: #f1f3f4; -fx-background-radius: 4;" />
+      </VBox>
+      
+                                                      <!-- Taille -->
+      <VBox spacing="5.0">
+         <HBox>
+            <children>
+               <Label text="Taille :" textFill="#5D3A7A" />
+               <Label fx:id="sizeLabel" text="0 B" textFill="#5D3A7A">
+                  <HBox.margin>
+                     <Insets left="5.0" />
+                  </HBox.margin>
+               </Label>
+            </children>
+         </HBox>
+      </VBox>
+      <VBox>
+         <children>
+            
+                           <!-- Crypt -->
+            <CheckBox fx:id="decryptCheckBox" text="Decrypt" textFill="#5D3A7A" />
+         </children>
+      </VBox>
+      
+      <!-- Buttons -->
+      <HBox alignment="CENTER" spacing="10.0">
+         <Button fx:id="cancelButton" onAction="#handleCancelAction" prefHeight="26.0" prefWidth="71.0" style="-fx-background-color: #FFD0E0; -fx-text-fill: #5D3A7A; -fx-background-radius: 4;" text="Annuler" />
+         <Region prefHeight="26.0" prefWidth="166.0" />
+         <Button fx:id="saveButton" onAction="#handleSaveAction" style="-fx-background-color: #CBFFB4; -fx-text-fill: #5d3a7a; -fx-background-radius: 4;" text="Enregistrer" />
+      </HBox>
+   </children>
+</VBox>

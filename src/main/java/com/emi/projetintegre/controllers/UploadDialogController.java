@@ -3,10 +3,8 @@ package com.emi.projetintegre.controllers;
 import com.emi.projetintegre.client.ClientSocketManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-
 import java.io.File;
 
 public class UploadDialogController {
@@ -65,12 +63,6 @@ public class UploadDialogController {
             return;
         }
 
-        // Handle encryption placeholder
-        if (encryptCheckBox.isSelected()) {
-            showAlert("Info", "Encryption not implemented yet");
-            // Placeholder for encryption logic
-        }
-
         String filePath = selectedFile.getAbsolutePath();
         String fileName = nameField.getText().trim();
 
@@ -107,8 +99,14 @@ public class UploadDialogController {
             }
         }
 
-        // Perform the upload with the final file name
-        boolean success = clientSocketManager.uploadDocument(filePath, fileName);
+        // Perform the upload based on encryption checkbox
+        boolean success;
+        if (encryptCheckBox.isSelected()) {
+            success = clientSocketManager.uploadEncryptedDocument(filePath, fileName);
+        } else {
+            success = clientSocketManager.uploadDocument(filePath, fileName);
+        }
+
         if (success) {
             showAlert("Success", "File uploaded successfully");
             if (onUploadSuccess != null) {

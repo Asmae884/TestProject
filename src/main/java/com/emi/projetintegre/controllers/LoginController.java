@@ -65,42 +65,42 @@ public class LoginController {
 
     private void setupHoverEffects() {
         // Hover effects for login button
-        loginButton.setOnMouseEntered(e -> {
+        loginButton.setOnMouseEntered(_ -> {
             loginButton.setCursor(Cursor.HAND);
             loginButton.setStyle("-fx-background-color: #4A2D63; -fx-text-fill: white; -fx-background-radius: 8;");
         });
         
-        loginButton.setOnMouseExited(e -> {
+        loginButton.setOnMouseExited(_ -> {
             loginButton.setCursor(Cursor.DEFAULT);
             loginButton.setStyle("-fx-background-color: #5D3A7A; -fx-text-fill: white; -fx-background-radius: 8;");
         });
         
-        loginButton.setOnMousePressed(e -> {
+        loginButton.setOnMousePressed(_ -> {
             loginButton.setTranslateY(1);
             loginButton.setEffect(new DropShadow());
         });
          
-        loginButton.setOnMouseReleased(e -> {
+        loginButton.setOnMouseReleased(_ -> {
             loginButton.setTranslateY(0);
             loginButton.setEffect(null);
         });
  
         // Hover effects for forgot password link
-        forgotPasswordLink.setOnMouseEntered(e -> {
+        forgotPasswordLink.setOnMouseEntered(_ -> {
             forgotPasswordLink.setCursor(Cursor.HAND);
             forgotPasswordLink.setStyle("-fx-text-fill: #FFA0C0; -fx-border-color: transparent;");
         });
         
-        forgotPasswordLink.setOnMouseExited(e -> {
+        forgotPasswordLink.setOnMouseExited(_ -> {
             forgotPasswordLink.setCursor(Cursor.DEFAULT);
             forgotPasswordLink.setStyle("-fx-text-fill: #FFD0E0; -fx-border-color: transparent;");
         });
         
-        forgotPasswordLink.setOnMousePressed(e -> {
+        forgotPasswordLink.setOnMousePressed(_ -> {
             forgotPasswordLink.setTranslateY(1);
         });
         
-        forgotPasswordLink.setOnMouseReleased(e -> {
+        forgotPasswordLink.setOnMouseReleased(_ -> {
             forgotPasswordLink.setTranslateY(0);
         });
     }
@@ -125,7 +125,7 @@ public class LoginController {
         timeline.setCycleCount(Timeline.INDEFINITE);
         movementTimelines.put(rect, timeline); // Store the timeline
 
-        KeyFrame keyFrame = new KeyFrame(Duration.millis(16), e -> {
+        KeyFrame keyFrame = new KeyFrame(Duration.millis(16), _ -> {
             // Update position
             double newX = rect.getTranslateX() + velocity[0] * 0.016; // 16ms = 0.016s
             double newY = rect.getTranslateY() + velocity[1] * 0.016;
@@ -157,7 +157,7 @@ public class LoginController {
     private void setupRectangleInteraction(Rectangle rect, boolean enableHoverScaling) {
         // Hover effect: scale up (only for dynamically added rectangles)
         if (enableHoverScaling) {
-            rect.setOnMouseEntered(e -> {
+            rect.setOnMouseEntered(_ -> {
                 rect.setCursor(Cursor.HAND);
                 ScaleTransition scale = new ScaleTransition(Duration.millis(200), rect);
                 scale.setToX(1.2);
@@ -165,7 +165,7 @@ public class LoginController {
                 scale.play();
             });
 
-            rect.setOnMouseExited(e -> {
+            rect.setOnMouseExited(_ -> {
                 rect.setCursor(Cursor.DEFAULT);
                 ScaleTransition scale = new ScaleTransition(Duration.millis(200), rect);
                 scale.setToX(1.0);
@@ -175,7 +175,7 @@ public class LoginController {
         }
 
         // Click effect: confetti-like disappearance
-        rect.setOnMouseClicked(e -> {
+        rect.setOnMouseClicked(_ -> {
             // Stop the movement timeline
             Timeline timeline = movementTimelines.remove(rect);
             if (timeline != null) {
@@ -196,7 +196,7 @@ public class LoginController {
             scatter.setByY((random.nextDouble() - 0.5) * 50);
 
             ParallelTransition confetti = new ParallelTransition(fadeOut, scaleDown, scatter);
-            confetti.setOnFinished(event -> {
+            confetti.setOnFinished(_ -> {
                 leftPane.getChildren().remove(rect);
                 rectangles.remove(rect);
             });
@@ -206,7 +206,7 @@ public class LoginController {
 
     private void setupPaneInteraction() {
         // Click on leftPane to spawn new rectangles
-        leftPane.setOnMouseClicked(e -> {
+        leftPane.setOnMouseClicked(_ -> {
             if (rectangles.size() < 6) { // Limit to 6 total rectangles (3 initial + 3 added)
                 Rectangle newRect = createRandomRectangle();
                 rectangles.add(newRect);
@@ -235,8 +235,8 @@ public class LoginController {
     }
 
     private void setupEventHandlers() {
-        loginButton.setOnAction(event -> handleLogin());
-        forgotPasswordLink.setOnAction(event -> handleForgotPassword());
+        loginButton.setOnAction(_ -> handleLogin());
+        forgotPasswordLink.setOnAction(_ -> handleForgotPassword());
     }
 
     private void handleLogin() {
@@ -312,6 +312,7 @@ public class LoginController {
             System.out.println("Showing Home scene");
             Stage stage = (Stage) loginButton.getScene().getWindow();
             stage.setScene(new Scene(root));
+            stage.setTitle("Home");
             stage.show();
         } catch (IOException e) {
             showAlert("Erreur", "Impossible de charger la page d'accueil", Alert.AlertType.ERROR);

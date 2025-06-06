@@ -8,7 +8,7 @@ import java.util.concurrent.Executors;
 
 public class Server {
     public static void main(String[] args) {
-        int port = 5000;
+        int port = 3000;
         ExecutorService threadPool = Executors.newFixedThreadPool(10); // Thread pool to handle 10 clients concurrently
 
         try (ServerSocket serverSocket = new ServerSocket(port)) {

@@ -12,6 +12,7 @@
       alignment="TOP_LEFT">
     
     <Label text="Ouvrir" onMouseClicked="#handleOpen" style="-fx-cursor: hand;"/>
+    <Label text="Modifier" onMouseClicked="#handleWrite" style="-fx-cursor: hand;"/>
     <Label text="Télécharger" onMouseClicked="#handleDownload" style="-fx-cursor: hand;"/>
     <Label text="Partager" onMouseClicked="#handleShare" style="-fx-cursor: hand;"/>
 

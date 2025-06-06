@@ -1,13 +1,15 @@
 package com.emi.projetintegre.controllers;
 
 import javafx.animation.PauseTransition;
+import javafx.util.Duration;
+
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
 public class SignalPasswordLostController {
 
@@ -57,7 +59,7 @@ public class SignalPasswordLostController {
         rootPane.getChildren().add(loadingLabel);
 
         // Wait 2 seconds then close the application
-        PauseTransition delay = new PauseTransition(Duration.seconds(2));
+        PauseTransition delay = new PauseTransition(Duration.seconds(5));
         delay.setOnFinished(event -> {
             Stage stage = (Stage) rootPane.getScene().getWindow();
             stage.close();
@@ -74,7 +76,7 @@ public class SignalPasswordLostController {
     }
 
     private void showAlert(String title, String message) {
-        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+        Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);

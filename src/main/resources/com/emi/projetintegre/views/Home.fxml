@@ -82,7 +82,7 @@
                <children>
                   <VBox fx:id="topMenu" alignment="CENTER" style="-fx-padding: 20 0 0 0;" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
                      <children>
-                        <Button fx:id="uploadBtn" mnemonicParsing="false" prefHeight="50.0" prefWidth="240.0" style="-fx-background-color: #e8def8; -fx-background-radius: 25; -fx-text-fill: #5D3A7A; -fx-font-weight: bold;" onAction="#handleUploadAction">
+                        <Button fx:id="uploadBtn" mnemonicParsing="false" onAction="#handleUploadAction" prefHeight="50.0" prefWidth="240.0" style="-fx-background-color: #e8def8; -fx-background-radius: 25; -fx-text-fill: #5D3A7A; -fx-font-weight: bold;">
                            <graphic>
                               <HBox alignment="CENTER" spacing="10.0">
                                  <ImageView fitHeight="24.0" fitWidth="24.0" preserveRatio="true">
@@ -98,7 +98,7 @@
                   </VBox>
                   <VBox fx:id="navItems" alignment="TOP_LEFT" style="-fx-padding: 20 0 0 20;" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="100">
                      <children>
-                        <Button fx:id="homeBtn" alignment="BASELINE_LEFT" contentDisplay="LEFT" graphicTextGap="15.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="240.0" style="-fx-background-color: #f3e8fd; -fx-background-radius: 0 20 20 0; -fx-text-fill: #5D3A7A; -fx-font-weight: bold; -fx-border-width: 0;" text="Accueil" onAction="#handleHomeAction">
+                        <Button fx:id="homeBtn" alignment="BASELINE_LEFT" contentDisplay="LEFT" graphicTextGap="15.0" mnemonicParsing="false" onAction="#handleHomeAction" prefHeight="40.0" prefWidth="240.0" style="-fx-background-color: #f3e8fd; -fx-background-radius: 0 20 20 0; -fx-text-fill: #5D3A7A; -fx-font-weight: bold; -fx-border-width: 0;" text="Accueil">
                            <graphic>
                               <ImageView fitHeight="20.0" fitWidth="20.0" preserveRatio="true">
                                  <image>
@@ -107,7 +107,7 @@
                               </ImageView>
                            </graphic>
                         </Button>
-                        <Button fx:id="sharedWithMeBtn" alignment="BASELINE_LEFT" contentDisplay="LEFT" graphicTextGap="15.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="240.0" style="-fx-background-color: transparent; -fx-text-fill: #5D3A7A;" text="Partagés avec moi" onAction="#handleSharedWithMeAction">
+                        <Button fx:id="sharedWithMeBtn" alignment="BASELINE_LEFT" contentDisplay="LEFT" graphicTextGap="15.0" mnemonicParsing="false" onAction="#handleSharedWithMeAction" prefHeight="40.0" prefWidth="240.0" style="-fx-background-color: transparent; -fx-text-fill: #5D3A7A;" text="Partagés avec moi">
                            <graphic>
                               <ImageView fitHeight="20.0" fitWidth="20.0" preserveRatio="true">
                                  <image>
@@ -116,7 +116,7 @@
                               </ImageView>
                            </graphic>
                         </Button>
-                        <Button fx:id="mySharedBtn" alignment="BASELINE_LEFT" contentDisplay="LEFT" graphicTextGap="15.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="240.0" style="-fx-background-color: transparent; -fx-text-fill: #5D3A7A;" text="Mes fichiers partagés" onAction="#handleMySharedAction">
+                        <Button fx:id="mySharedBtn" alignment="BASELINE_LEFT" contentDisplay="LEFT" graphicTextGap="15.0" mnemonicParsing="false" onAction="#handleMySharedAction" prefHeight="40.0" prefWidth="240.0" style="-fx-background-color: transparent; -fx-text-fill: #5D3A7A;" text="Mes fichiers partagés">
                            <graphic>
                               <ImageView fitHeight="20.0" fitWidth="20.0" preserveRatio="true">
                                  <image>
@@ -125,7 +125,7 @@
                               </ImageView>
                            </graphic>
                         </Button>
-                        <Button fx:id="recentBtn" alignment="BASELINE_LEFT" contentDisplay="LEFT" graphicTextGap="15.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="240.0" style="-fx-background-color: transparent; -fx-text-fill: #5D3A7A;" text="Récents" onAction="#handleRecentAction">
+                        <Button fx:id="recentBtn" alignment="BASELINE_LEFT" contentDisplay="LEFT" graphicTextGap="15.0" mnemonicParsing="false" onAction="#handleRecentAction" prefHeight="40.0" prefWidth="240.0" style="-fx-background-color: transparent; -fx-text-fill: #5D3A7A;" text="Récents">
                            <graphic>
                               <ImageView fitHeight="20.0" fitWidth="20.0" preserveRatio="true">
                                  <image>
@@ -134,7 +134,7 @@
                               </ImageView>
                            </graphic>
                         </Button>
-                        <Button fx:id="starredBtn" alignment="BASELINE_LEFT" contentDisplay="LEFT" graphicTextGap="15.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="240.0" style="-fx-background-color: transparent; -fx-text-fill: #5D3A7A;" text="Favoris" onAction="#handleStarredAction">
+                        <Button fx:id="starredBtn" alignment="BASELINE_LEFT" contentDisplay="LEFT" graphicTextGap="15.0" mnemonicParsing="false" onAction="#handleStarredAction" prefHeight="40.0" prefWidth="240.0" style="-fx-background-color: transparent; -fx-text-fill: #5D3A7A;" text="Favoris">
                            <graphic>
                               <ImageView fitHeight="20.0" fitWidth="20.0" preserveRatio="true">
                                  <image>
@@ -143,7 +143,7 @@
                               </ImageView>
                            </graphic>
                         </Button>
-                        <Button fx:id="trashBtn" alignment="BASELINE_LEFT" contentDisplay="LEFT" graphicTextGap="15.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="240.0" style="-fx-background-color: transparent; -fx-text-fill: #5D3A7A;" text="Corbeille" onAction="#handleTrashAction">
+                        <Button fx:id="trashBtn" alignment="BASELINE_LEFT" contentDisplay="LEFT" graphicTextGap="15.0" mnemonicParsing="false" onAction="#handleTrashAction" prefHeight="40.0" prefWidth="240.0" style="-fx-background-color: transparent; -fx-text-fill: #5D3A7A;" text="Corbeille">
                            <graphic>
                               <ImageView fitHeight="20.0" fitWidth="20.0" preserveRatio="true">
                                  <image>
@@ -275,7 +275,7 @@
                                                 <TableColumn fx:id="recentTypeColumn" prefWidth="150.0" style="-fx-background-color: #FFD0E0; -fx-padding: 5; -fx-font-family: 'System'; -fx-font-size: 12;" text="Type" />
                                                 <TableColumn fx:id="recentModifiedColumn" prefWidth="200.0" style="-fx-background-color: #FFD0E0; -fx-padding: 5; -fx-font-family: 'System'; -fx-font-size: 12;" text="Dernière modification" />
                                                 <TableColumn fx:id="recentsizeColumn" prefWidth="150.0" style="-fx-background-color: #FFD0E0; -fx-padding: 5; -fx-font-family: 'System'; -fx-font-size: 12;" text="Taille" />
-                                                <TableColumn fx:id="recentMenuColumn" prefWidth="5.0" style="-fx-background-color: #FFD0E0; -fx-padding: 5; -fx-font-family: 'System'; -fx-font-size: 12;" text="" />
+                                                <TableColumn fx:id="recentMenuColumn" prefWidth="50.0" style="-fx-background-color: #FFD0E0; -fx-padding: 5; -fx-font-family: 'System'; -fx-font-size: 12;" text="" />
                                              </columns>
                                           </TableView>
                                        </content>
@@ -297,7 +297,7 @@
                                           <TableColumn fx:id="fileTypeColumn" prefWidth="150.0" style="-fx-background-color: #CBFFB4; -fx-padding: 5; -fx-font-family: 'System'; -fx-font-size: 12;" text="Type" />
                                           <TableColumn fx:id="fileModifiedColumn" prefWidth="200.0" style="-fx-background-color: #CBFFB4; -fx-padding: 5; -fx-font-family: 'System'; -fx-font-size: 12;" text="Dernière modification" />
                                           <TableColumn fx:id="fileSizeColumn" prefWidth="150.0" style="-fx-background-color: #CBFFB4; -fx-padding: 5; -fx-font-family: 'System'; -fx-font-size: 12;" text="Taille" />
-                                          <TableColumn fx:id="fileMenuColumn" prefWidth="5.0" style="-fx-background-color: #FFD0E0; -fx-padding: 5; -fx-font-family: 'System'; -fx-font-size: 12;" text="" />
+                                          <TableColumn fx:id="fileMenuColumn" prefWidth="50.0" style="-fx-background-color: #CBFFB4; -fx-padding: 5; -fx-font-family: 'System'; -fx-font-size: 12;" text="" />
                                        </columns>
                                        <VBox.margin>
                                           <Insets top="10.0" />

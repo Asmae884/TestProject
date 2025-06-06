@@ -4,17 +4,16 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 public class PersonalDocument implements Serializable {
-    private static final long serialVersionUID = 1L;  // Required for serialization
-    
+    private static final long serialVersionUID = 1L;
     private int docID;
     private String fileName;
-    private byte[] content;  // Assume encrypted data
+    private byte[] content;
     private String numberType;
     private long size;
     private LocalDateTime uploadDate;
 
     public PersonalDocument() {}
-    
+
     public PersonalDocument(int docID, String fileName, byte[] content, String numberType, long size, LocalDateTime uploadDate) {
         this.docID = docID;
         this.fileName = fileName;
@@ -22,6 +21,16 @@ public class PersonalDocument implements Serializable {
         this.numberType = numberType;
         this.size = size;
         this.uploadDate = uploadDate;
+    }
+
+    // New constructor for listing documents without content
+    public PersonalDocument(int docID, String fileName, String numberType, LocalDateTime uploadDate, long size) {
+        this.docID = docID;
+        this.fileName = fileName;
+        this.numberType = numberType;
+        this.uploadDate = uploadDate;
+        this.size = size;
+        this.content = null; // Explicitly set to null
     }
 
     public int getDocID() {
