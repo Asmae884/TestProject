@@ -1,7 +1,5 @@
 package com.emi.projetintegre.server;
 
-import java.util.Scanner;
-
 public class Main {
     public static void main(String[] args) {
         try {
@@ -39,8 +37,7 @@ public class Main {
                         System.out.print("Is admin? (true/false): ");
                         boolean isAdmin = scanner.nextBoolean();
 
-                        String secretKey = db.addUser(username, password, months, isAdmin);
-                        System.out.println("User added! Secret Key: " + secretKey);
+                        db.addUser(username, password, months, isAdmin);
                         break;
 
                     case 2:
