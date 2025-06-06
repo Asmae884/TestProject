@@ -9,7 +9,8 @@ module com.emi.projetintegre {
     // Modules pour votre fonctionnalité
     requires java.sql;
     requires org.bouncycastle.provider; // Pour le cryptage
-    requires org.slf4j; // Pour les logs
+    requires org.slf4j;
+	requires java.desktop; // Pour les logs
     
     // Ouverture des packages pour JavaFX/FXML
     opens com.emi.projetintegre to javafx.fxml;

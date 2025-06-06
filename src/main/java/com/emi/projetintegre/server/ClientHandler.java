@@ -561,149 +561,149 @@ public class ClientHandler implements Runnable {
     }
 
     private void handleUpdateDocumentContent(int docId) throws IOException, ClassNotFoundException {
-        if (!isAuthenticated) {
-            sendError("NOT_AUTHENTICATED");
-            return;
-        }
-
-        if (userId == -1) {
-            sendError("INVALID_USER_ID");
-            return;
-        }
-
-        if (dbConnection == null || isConnectionClosed()) {
-            sendError("DATABASE_CONNECTION_ERROR");
-            return;
-        }
-
-        // Read file type and content from client
-        Object fileTypeObj = input.readObject();
-        if (!(fileTypeObj instanceof String)) {
-            sendError("INVALID_FILE_TYPE");
-            return;
-        }
-        String fileType = ((String) fileTypeObj).toLowerCase();
-
-        Object contentObj = input.readObject();
-        if (!(contentObj instanceof byte[])) {
-            sendError("INVALID_CONTENT_TYPE");
-            return;
-        }
-        byte[] content = (byte[]) contentObj;
-
-        try {
-            // Validate file type
-            if (!fileType.equals("txt") && !fileType.equals("png") && !fileType.equals("jpg") && !fileType.equals("jpeg")) {
-                sendError("UNSUPPORTED_FILE_TYPE: " + fileType);
-                return;
-            }
-
-            // Fetch document details
-            String sql = "SELECT file_name, file_type, encryption_key, is_encrypted, owner_id, file_path " +
-                         "FROM PersonalDocuments WHERE docID = ?";
-            try (PreparedStatement stmt = dbConnection.prepareStatement(sql)) {
-                stmt.setInt(1, docId);
-                try (ResultSet rs = stmt.executeQuery()) {
-                    if (!rs.next()) {
-                        sendError("DOCUMENT_NOT_FOUND");
-                        return;
-                    }
-
-                    String fileName = rs.getString("file_name");
-                    String storedFileType = rs.getString("file_type").toLowerCase();
-                    String encryptionKey = rs.getString("encryption_key");
-                    boolean isEncrypted = rs.getInt("is_encrypted") == 1;
-                    String filePath = rs.getString("file_path");
-                    boolean hasWriteAccess = rs.getInt("owner_id") == userId;
-
-                    // Verify file type matches
-                    if (!fileType.equals(storedFileType)) {
-                        sendError("FILE_TYPE_MISMATCH: Expected " + storedFileType + ", got " + fileType);
-                        return;
-                    }
-
-                    // Check write permissions for non-owners
-                    if (!hasWriteAccess) {
-                        String permissionSql = "SELECT accessID FROM UserPermissions WHERE docID = ? AND userID = ?";
-                        try (PreparedStatement permStmt = dbConnection.prepareStatement(permissionSql)) {
-                            permStmt.setInt(1, docId);
-                            permStmt.setInt(2, userId);
-                            try (ResultSet permRs = permStmt.executeQuery()) {
-                                if (permRs.next()) {
-                                    int accessId = permRs.getInt("accessID");
-                                    boolean[] flags = getPermissionFlags(accessId);
-                                    hasWriteAccess = flags[1]; // Check write permission
-                                }
-                            }
-                        }
-                    }
-
-                    if (!hasWriteAccess) {
-                        sendError("NO_WRITE_PERMISSION");
-                        return;
-                    }
-
-                    Path path = Paths.get(UPLOAD_DIR, filePath != null ? filePath : getUsername(), fileName);
-                    if (!Files.exists(path.getParent())) {
-                        Files.createDirectories(path.getParent());
-                    }
-
-                    // Handle file writing
-                    if (isEncrypted) {
-                        if (encryptionKey == null || encryptionKey.isEmpty()) {
-                            sendError("ENCRYPTION_KEY_NOT_FOUND");
-                            return;
-                        }
-                        try {
-                            byte[] keyBytes = Base64.getDecoder().decode(encryptionKey);
-                            if (keyBytes.length != 16 && keyBytes.length != 24 && keyBytes.length != 32) {
-                                sendError("INVALID_KEY_LENGTH");
-                                return;
-                            }
-                            SecretKey secretKey = new SecretKeySpec(keyBytes, "AES");
-                            fileSecurity.setKey(secretKey);
-
-                            Path tempFile = Files.createTempFile(path.getParent(), "plain_", ".tmp");
-                            try {
-                                // Write plain content to temp file
-                                Files.write(tempFile, content);
-                                // Encrypt temp file to target path
-                                fileSecurity.encryptFile(tempFile, path);
-                            } finally {
-                                Files.deleteIfExists(tempFile);
-                            }
-                        } catch (IllegalArgumentException | InvalidKeyException e) {
-                            sendError("INVALID_ENCRYPTION_KEY: " + e.getMessage());
-                            return;
-                        } catch (Exception e) {
-                            sendError("ENCRYPTION_ERROR: " + e.getMessage());
-                            return;
-                        }
-                    } else {
-                        Files.write(path, content);
-                    }
-
-                    // Update modify_date and file_size in database
-                    String updateSql = "UPDATE PersonalDocuments SET modify_date = ?, file_size = ? WHERE docID = ?";
-                    try (PreparedStatement updateStmt = dbConnection.prepareStatement(updateSql)) {
-                        updateStmt.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now()));
-                        updateStmt.setLong(2, content.length);
-                        updateStmt.setInt(3, docId);
-                        updateStmt.executeUpdate();
-                    }
-
-                    sendResponse("UPDATE_SUCCESS");
-                    System.out.println("Successfully updated content for docID: " + docId);
-                }
-            }
-        } catch (SQLException e) {
-            sendError("DATABASE_ERROR: " + e.getMessage());
-            e.printStackTrace();
-        } catch (IOException e) {
-            sendError("FILE_SYSTEM_ERROR: " + e.getMessage());
-            e.printStackTrace();
-        }
+    if (!isAuthenticated) {
+        sendError("NOT_AUTHENTICATED");
+        return;
     }
+
+    if (userId == -1) {
+        sendError("INVALID_USER_ID");
+        return;
+    }
+
+    if (dbConnection == null || isConnectionClosed()) {
+        sendError("DATABASE_CONNECTION_ERROR");
+        return;
+    }
+
+    // Read file type and content from client
+    Object fileTypeObj = input.readObject();
+    if (!(fileTypeObj instanceof String)) {
+        sendError("INVALID_FILE_TYPE");
+        return;
+    }
+    String fileType = ((String) fileTypeObj).toLowerCase();
+
+    Object contentObj = input.readObject();
+    if (!(contentObj instanceof byte[])) {
+        sendError("INVALID_CONTENT_TYPE");
+        return;
+    }
+    byte[] content = (byte[]) contentObj;
+
+    try {
+        // Validate file type
+        if (!fileType.equals("txt") && !fileType.equals("png") && !fileType.equals("jpg") && !fileType.equals("jpeg")) {
+            sendError("UNSUPPORTED_FILE_TYPE: " + fileType);
+            return;
+        }
+
+        // Fetch document details
+        String sql = "SELECT file_name, file_type, encryption_key, is_encrypted, owner_id, file_path " +
+                     "FROM PersonalDocuments WHERE docID = ?";
+        try (PreparedStatement stmt = dbConnection.prepareStatement(sql)) {
+            stmt.setInt(1, docId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (!rs.next()) {
+                    sendError("DOCUMENT_NOT_FOUND");
+                    return;
+                }
+
+                String fileName = rs.getString("file_name");
+                String storedFileType = rs.getString("file_type").toLowerCase();
+                String encryptionKey = rs.getString("encryption_key");
+                boolean isEncrypted = rs.getInt("is_encrypted") == 1;
+                String filePath = rs.getString("file_path");
+                boolean hasWriteAccess = rs.getInt("owner_id") == userId;
+
+                // Verify file type matches
+                if (!fileType.equals(storedFileType)) {
+                    sendError("FILE_TYPE_MISMATCH: Expected " + storedFileType + ", got " + fileType);
+                    return;
+                }
+
+                // Check write permissions for non-owners
+                if (!hasWriteAccess) {
+                    String permissionSql = "SELECT accessID FROM UserPermissions WHERE docID = ? AND userID = ?";
+                    try (PreparedStatement permStmt = dbConnection.prepareStatement(permissionSql)) {
+                        permStmt.setInt(1, docId);
+                        permStmt.setInt(2, userId);
+                        try (ResultSet permRs = permStmt.executeQuery()) {
+                            if (permRs.next()) {
+                                int accessId = permRs.getInt("accessID");
+                                boolean[] flags = getPermissionFlags(accessId);
+                                hasWriteAccess = flags[1]; // Check write permission
+                            }
+                        }
+                    }
+                }
+
+                if (!hasWriteAccess) {
+                    sendError("NO_WRITE_PERMISSION");
+                    return;
+                }
+
+                Path path = Paths.get(UPLOAD_DIR, filePath != null ? filePath : getUsername(), fileName);
+                if (!Files.exists(path.getParent())) {
+                    Files.createDirectories(path.getParent());
+                }
+
+                // Handle file writing
+                if (isEncrypted) {
+                    if (encryptionKey == null || encryptionKey.isEmpty()) {
+                        sendError("ENCRYPTION_KEY_NOT_FOUND");
+                        return;
+                    }
+                    try {
+                        byte[] keyBytes = Base64.getDecoder().decode(encryptionKey);
+                        if (keyBytes.length != 16 && keyBytes.length != 24 && keyBytes.length != 32) {
+                            sendError("INVALID_KEY_LENGTH");
+                            return;
+                        }
+                        SecretKey secretKey = new SecretKeySpec(keyBytes, "AES");
+                        fileSecurity.setKey(secretKey);
+
+                        Path tempFile = Files.createTempFile(path.getParent(), "plain_", ".tmp");
+                        try {
+                            // Write plain content to temp file
+                            Files.write(tempFile, content);
+                            // Encrypt temp file to target path
+                            fileSecurity.encryptFile(tempFile, path);
+                        } finally {
+                            Files.deleteIfExists(tempFile);
+                        }
+                    } catch (IllegalArgumentException | InvalidKeyException e) {
+                        sendError("INVALID_ENCRYPTION_KEY: " + e.getMessage());
+                        return;
+                    } catch (Exception e) {
+                        sendError("ENCRYPTION_ERROR: " + e.getMessage());
+                        return;
+                    }
+                } else {
+                    Files.write(path, content);
+                }
+
+                // Update modify_date and file_size in database
+                String updateSql = "UPDATE PersonalDocuments SET modify_date = ?, file_size = ? WHERE docID = ?";
+                try (PreparedStatement updateStmt = dbConnection.prepareStatement(updateSql)) {
+                    updateStmt.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now()));
+                    updateStmt.setLong(2, content.length);
+                    updateStmt.setInt(3, docId);
+                    updateStmt.executeUpdate();
+                }
+
+                sendResponse("UPDATE_SUCCESS");
+                System.out.println("Successfully updated content for docID: " + docId);
+            }
+        }
+    } catch (SQLException e) {
+        sendError("DATABASE_ERROR: " + e.getMessage());
+        e.printStackTrace();
+    } catch (IOException e) {
+        sendError("FILE_SYSTEM_ERROR: " + e.getMessage());
+        e.printStackTrace();
+    }
+}
 
     private void handleRestoreDocuments(List<Integer> docIDs) throws IOException {
         if (!isAuthenticated) {
@@ -2049,9 +2049,9 @@ public class ClientHandler implements Runnable {
         }
 
         try {
-            // Validate document exists and belongs to the current user
+            // Validate document exists and check permissions
             String docCheckSql = "SELECT file_name, file_hash, upload_date, modify_date, owner_id, file_type, file_size, encryption_key, is_encrypted, file_path " +
-                                "FROM PersonalDocuments WHERE docID = ? AND owner_id = ?";
+                                "FROM PersonalDocuments WHERE docID = ?";
             String fileName = null;
             String fileHash = null;
             Timestamp uploadDate = null;
@@ -2061,10 +2061,10 @@ public class ClientHandler implements Runnable {
             String encryptionKey = null;
             int isEncrypted = 0;
             String filePath = null;
+            boolean hasDeleteAccess = false;
 
             try (PreparedStatement docStmt = dbConnection.prepareStatement(docCheckSql)) {
                 docStmt.setInt(1, docId);
-                docStmt.setInt(2, userId);
                 try (ResultSet rs = docStmt.executeQuery()) {
                     if (rs.next()) {
                         fileName = rs.getString("file_name");
@@ -2076,11 +2076,33 @@ public class ClientHandler implements Runnable {
                         encryptionKey = rs.getString("encryption_key");
                         isEncrypted = rs.getInt("is_encrypted");
                         filePath = rs.getString("file_path");
+                        hasDeleteAccess = rs.getInt("owner_id") == userId;
                     } else {
                         sendError("DOCUMENT_NOT_FOUND");
                         return;
                     }
                 }
+            }
+
+            // Check delete permissions for non-owners
+            if (!hasDeleteAccess) {
+                String permissionSql = "SELECT accessID FROM UserPermissions WHERE docID = ? AND userID = ?";
+                try (PreparedStatement permStmt = dbConnection.prepareStatement(permissionSql)) {
+                    permStmt.setInt(1, docId);
+                    permStmt.setInt(2, userId);
+                    try (ResultSet permRs = permStmt.executeQuery()) {
+                        if (permRs.next()) {
+                            int accessId = permRs.getInt("accessID");
+                            boolean[] flags = getPermissionFlags(accessId);
+                            hasDeleteAccess = flags[3]; // Check delete permission
+                        }
+                    }
+                }
+            }
+
+            if (!hasDeleteAccess) {
+                sendError("NO_DELETE_PERMISSION");
+                return;
             }
 
             // Move file to Trash directory
@@ -2106,7 +2128,7 @@ public class ClientHandler implements Runnable {
 
             // Move document to TrashDocuments table
             String insertTrashSql = "INSERT INTO TrashDocuments (docID, file_name, file_hash, upload_date, modify_date, owner_id, file_type, file_size, encryption_key, is_encrypted, file_path) " +
-                                   "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             try (PreparedStatement insertStmt = dbConnection.prepareStatement(insertTrashSql)) {
                 insertStmt.setInt(1, docId);
                 insertStmt.setString(2, fileName);
@@ -2230,69 +2252,69 @@ public class ClientHandler implements Runnable {
     }
 
     private void handleDocumentDownload() throws IOException {
-        try {
-            int docId = (Integer) input.readObject();
-            String sql = "SELECT file_name, file_path, owner_id FROM PersonalDocuments WHERE docID = ?";
-            
-            try (PreparedStatement stmt = dbConnection.prepareStatement(sql)) {
-                stmt.setInt(1, docId);
-                try (ResultSet rs = stmt.executeQuery()) {
-                    if (rs.next()) {
-                        String fileName = rs.getString("file_name");
-                        String filePath = rs.getString("file_path");
-                        boolean hasDownloadAccess = rs.getInt("owner_id") == userId;
+    try {
+        int docId = (Integer) input.readObject();
+        String sql = "SELECT file_name, file_path, owner_id FROM PersonalDocuments WHERE docID = ?";
+        
+        try (PreparedStatement stmt = dbConnection.prepareStatement(sql)) {
+            stmt.setInt(1, docId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    String fileName = rs.getString("file_name");
+                    String filePath = rs.getString("file_path");
+                    boolean hasDownloadAccess = rs.getInt("owner_id") == userId;
 
-                        // Check download permissions for non-owners
-                        if (!hasDownloadAccess) {
-                            String permissionSql = "SELECT accessID FROM UserPermissions WHERE docID = ? AND userID = ?";
-                            try (PreparedStatement permStmt = dbConnection.prepareStatement(permissionSql)) {
-                                permStmt.setInt(1, docId);
-                                permStmt.setInt(2, userId);
-                                try (ResultSet permRs = permStmt.executeQuery()) {
-                                    if (permRs.next()) {
-                                        int accessId = permRs.getInt("accessID");
-                                        boolean[] flags = getPermissionFlags(accessId);
-                                        hasDownloadAccess = flags[2]; // Check download permission
-                                    }
+                    // Check download permissions for non-owners
+                    if (!hasDownloadAccess) {
+                        String permissionSql = "SELECT accessID FROM UserPermissions WHERE docID = ? AND userID = ?";
+                        try (PreparedStatement permStmt = dbConnection.prepareStatement(permissionSql)) {
+                            permStmt.setInt(1, docId);
+                            permStmt.setInt(2, userId);
+                            try (ResultSet permRs = permStmt.executeQuery()) {
+                                if (permRs.next()) {
+                                    int accessId = permRs.getInt("accessID");
+                                    boolean[] flags = getPermissionFlags(accessId);
+                                    hasDownloadAccess = flags[2]; // Check download permission
                                 }
                             }
                         }
-
-                        if (!hasDownloadAccess) {
-                            sendError("NO_DOWNLOAD_PERMISSION");
-                            return;
-                        }
-
-                        Path path = Paths.get(UPLOAD_DIR, filePath != null ? filePath : getUsername(), fileName);
-                        if (!Files.exists(path)) {
-                            sendError("FILE_NOT_FOUND");
-                            return;
-                        }
-
-                        // Read and send the file as-is
-                        byte[] fileContent = Files.readAllBytes(path);
-                        
-                        // Send just the filename and file content
-                        List<Object> responseData = new ArrayList<>();
-                        responseData.add(fileName);
-                        responseData.add(fileContent);
-
-                        output.writeObject(responseData);
-                        output.flush();
-                        sendResponse("DOWNLOAD_SUCCESS");
-                    } else {
-                        sendError("DOCUMENT_NOT_FOUND");
                     }
+
+                    if (!hasDownloadAccess) {
+                        sendError("NO_DOWNLOAD_PERMISSION");
+                        return;
+                    }
+
+                    Path path = Paths.get(UPLOAD_DIR, filePath != null ? filePath : getUsername(), fileName);
+                    if (!Files.exists(path)) {
+                        sendError("FILE_NOT_FOUND");
+                        return;
+                    }
+
+                    // Read and send the file as-is
+                    byte[] fileContent = Files.readAllBytes(path);
+                    
+                    // Send just the filename and file content
+                    List<Object> responseData = new ArrayList<>();
+                    responseData.add(fileName);
+                    responseData.add(fileContent);
+
+                    output.writeObject(responseData);
+                    output.flush();
+                    sendResponse("DOWNLOAD_SUCCESS");
+                } else {
+                    sendError("DOCUMENT_NOT_FOUND");
                 }
             }
-        } catch (SQLException e) {
-            sendError("DATABASE_ERROR: " + e.getMessage());
-            e.printStackTrace();
-        } catch (Exception e) {
-            sendError("DOWNLOAD_ERROR: " + e.getMessage());
-            e.printStackTrace();
         }
+    } catch (SQLException e) {
+        sendError("DATABASE_ERROR: " + e.getMessage());
+        e.printStackTrace();
+    } catch (Exception e) {
+        sendError("DOWNLOAD_ERROR: " + e.getMessage());
+        e.printStackTrace();
     }
+}
 
     private Path getUserDirectory() throws IOException {
         Path userDir = Paths.get(UPLOAD_DIR, getUsername());

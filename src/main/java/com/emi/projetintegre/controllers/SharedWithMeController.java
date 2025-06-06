@@ -235,7 +235,8 @@ public class SharedWithMeController {
 
     private void showFileActionMenu(PersonalDocument document, Button anchor) {
         try {
-            String fxmlPath = "/com/emi/projetintegre/views/FileActionSharedWithMeMenu.fxml";
+            //String fxmlPath = "/com/emi/projetintegre/views/FileActionSharedWithMeMenu.fxml";
+            String fxmlPath = "/com/emi/projetintegre/views/FileActionMenu.fxml";
             System.out.println("Attempting to load FXML: " + fxmlPath);
             URL resourceUrl = getClass().getResource(fxmlPath);
             if (resourceUrl == null) {
@@ -247,7 +248,7 @@ public class SharedWithMeController {
             
             FXMLLoader loader = new FXMLLoader(resourceUrl);
             VBox menu = loader.load();
-            FileActionSharedWithMeMenuController controller = loader.getController();
+            FileActionMenuController controller = loader.getController();
             controller.setDocument(document);
             controller.setClientSocketManager(clientSocketManager);
             controller.setOnActionComplete(() -> populateTables(search.getText().trim()));
